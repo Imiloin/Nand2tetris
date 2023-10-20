@@ -1,0 +1,278 @@
+// File name: Pong\Bat.vm
+// line 16: class Bat { 
+// line 16: field x , y 
+// line 18: field width , height 
+// line 19: field direction 
+// line 20: constructor Bat new 
+// line 23: ( Ax , Ay , Awidth , Aheight ) { 
+function Bat.new 0
+push constant 5
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+// line 23: let x = Ax ; 
+push argument 1
+pop this 1
+// line 24: let y = Ay ; 
+push argument 2
+pop this 2
+// line 25: let width = Awidth ; 
+push argument 3
+pop this 3
+// line 26: let height = Aheight ; 
+push constant 2
+pop this 4
+// line 27: let direction = 2 ; 
+push pointer 0
+call Bat.show 1
+pop temp 0
+// line 28: do show ( ) ; 
+push pointer 0
+return
+// line 29: return this ; 
+// line 31: } method void dispose 
+// line 34: ( ) { 
+function Bat.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+// line 34: do Memory . deAlloc ( this ) ; 
+push constant 0
+return
+// line 35: return ; 
+// line 37: } method void show 
+// line 40: ( ) { 
+function Bat.show 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 40: do Screen . setColor ( true ) ; 
+push pointer 0
+call Bat.draw 1
+pop temp 0
+// line 41: do draw ( ) ; 
+push constant 0
+return
+// line 42: return ; 
+// line 44: } method void hide 
+// line 47: ( ) { 
+function Bat.hide 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 47: do Screen . setColor ( false ) ; 
+push pointer 0
+call Bat.draw 1
+pop temp 0
+// line 48: do draw ( ) ; 
+push constant 0
+return
+// line 49: return ; 
+// line 51: } method void draw 
+// line 54: ( ) { 
+function Bat.draw 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 54: do Screen . drawRectangle ( x , y , x + width , y + height ) ; 
+push constant 0
+return
+// line 55: return ; 
+// line 57: } method void setDirection 
+// line 60: ( Adirection ) { 
+function Bat.setDirection 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 4
+// line 60: let direction = Adirection ; 
+push constant 0
+return
+// line 61: return ; 
+// line 63: } method getLeft 
+// line 66: ( ) { 
+function Bat.getLeft 0
+push argument 0
+pop pointer 0
+push this 0
+return
+// line 66: return x ; 
+// line 68: } method getRight 
+// line 71: ( ) { 
+function Bat.getRight 0
+push argument 0
+pop pointer 0
+push this 0
+push this 2
+add
+return
+// line 71: return x + width ; 
+// line 73: } method void setWidth 
+// line 76: ( Awidth ) { 
+function Bat.setWidth 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Bat.hide 1
+pop temp 0
+// line 76: do hide ( ) ; 
+push argument 1
+pop this 2
+// line 77: let width = Awidth ; 
+push pointer 0
+call Bat.show 1
+pop temp 0
+// line 78: do show ( ) ; 
+push constant 0
+return
+// line 79: return ; 
+// line 81: } method void move 
+// line 84: ( ) { 
+function Bat.move 0
+push argument 0
+pop pointer 0
+push this 4
+push constant 1
+eq
+if-goto IF_TRUE17
+goto IF_FALSE17
+label IF_TRUE17
+// line 84: if ( direction = 1 ) { 
+push this 0
+push constant 4
+sub
+pop this 0
+// line 85: let x = x - 4 ; 
+push this 0
+push constant 0
+lt
+if-goto IF_TRUE18
+goto IF_FALSE18
+label IF_TRUE18
+// line 86: if ( x < 0 ) { 
+push constant 0
+pop this 0
+// line 87: let x = 0 ; 
+// line 87: } 
+label IF_FALSE18
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 87: do Screen . setColor ( false ) ; 
+push this 0
+push this 2
+add
+push constant 1
+add
+push this 1
+push this 0
+push this 2
+add
+push constant 4
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 88: do Screen . drawRectangle ( ( x + width ) + 1 , y , ( x + width ) + 4 , y + height ) ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 89: do Screen . setColor ( true ) ; 
+push this 0
+push this 1
+push this 0
+push constant 3
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 90: do Screen . drawRectangle ( x , y , x + 3 , y + height ) ; 
+// line 91: } 
+goto IF_END17
+label IF_FALSE17
+// line 92: else { 
+push this 0
+push constant 4
+add
+pop this 0
+// line 93: let x = x + 4 ; 
+push this 0
+push this 2
+add
+push constant 511
+gt
+if-goto IF_TRUE19
+goto IF_FALSE19
+label IF_TRUE19
+// line 94: if ( ( x + width ) > 511 ) { 
+push constant 511
+push this 2
+sub
+pop this 0
+// line 95: let x = 511 - width ; 
+// line 95: } 
+label IF_FALSE19
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 95: do Screen . setColor ( false ) ; 
+push this 0
+push constant 4
+sub
+push this 1
+push this 0
+push constant 1
+sub
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 96: do Screen . drawRectangle ( x - 4 , y , x - 1 , y + height ) ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 97: do Screen . setColor ( true ) ; 
+push this 0
+push this 2
+add
+push constant 3
+sub
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 98: do Screen . drawRectangle ( ( x + width ) - 3 , y , x + width , y + height ) ; 
+label IF_END17
+// line 99: } 
+push constant 0
+return
+// line 100: return ; 

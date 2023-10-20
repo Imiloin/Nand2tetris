@@ -1,0 +1,256 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+    static Array twoToThe;
+    static Array stack;  // math stack, length 16
+    static int sp;  // stack pointer, points to one past the top of the stack
+
+    /** Initializes the library. */
+    function void init() {
+        let stack = Array.new(16);
+        let sp = 0;
+        let twoToThe = Array.new(16);
+        let twoToThe[0] = 1;
+        let twoToThe[1] = 2;
+        let twoToThe[2] = 4;
+        let twoToThe[3] = 8;
+        let twoToThe[4] = 16;
+        let twoToThe[5] = 32;
+        let twoToThe[6] = 64;
+        let twoToThe[7] = 128;
+        let twoToThe[8] = 256;
+        let twoToThe[9] = 512;
+        let twoToThe[10] = 1024;
+        let twoToThe[11] = 2048;
+        let twoToThe[12] = 4096;
+        let twoToThe[13] = 8192;
+        let twoToThe[14] = 16384;
+        let twoToThe[15] = 16384 + 16384;
+        return;
+    }
+
+    function int getTwoToThe(int n) {
+    // assume n is between 0 and 15
+        return twoToThe[n];
+    }
+
+    function boolean bit(int x, int n) {
+    // assume n is between 0 and 15
+        return ~((x & twoToThe[n]) = 0);
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        if (x < 0) {
+            return -x;
+        }
+        return x;
+    }
+
+    /** Returns the product of x and y. 
+     *  When a Jack compiler detects the multiplication operator '*' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x*y and multiply(x,y) return the same value.
+     */
+    function int multiply(int x, int y) {
+        var int i, result, shiftedX;
+        let i = 0;
+        let result = 0;
+        let shiftedX = x;
+        while (i < 16) {
+            if (Math.bit(y, i)) {
+                let result = result + shiftedX;
+            }
+            let shiftedX = shiftedX + shiftedX;
+            let i = i + 1;
+        }
+        return result;
+    }
+
+    function int multiply_by_32(int x) {
+    // assume input is positive and less than 512
+        var int i, shiftedX;
+        let i = 0;
+        let shiftedX = x;
+        while (i < 5) {
+            let shiftedX = shiftedX + shiftedX;
+            let i = i + 1;
+        }
+        return shiftedX;
+    }
+
+    /** Returns the integer part of x/y.
+     *  When a Jack compiler detects the multiplication operator '/' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x/y and divide(x,y) return the same value.
+     */
+    function int divide(int x, int y) {
+        var int result, subx, suby;
+        var boolean negative;
+        let result = 0;
+        let negative = false;
+        // confirm sign of result
+        if (x < 0) {
+            let subx = -x;
+            let negative = ~negative;
+        }
+        else {
+            let subx = x;
+        }
+        if (y = 0) {
+            return 0;  // Error, divide by zero
+        } 
+        else {
+            if (y < 0) {
+                let suby = -y;
+                let negative = ~negative;
+            }
+            else {
+                let suby = y;
+            }
+        }
+        let sp = 0;
+        while ((~(suby > subx)) & (suby > 0)) {
+            let stack[sp] = suby;
+            let sp = sp + 1;
+            if (sp > 16) {
+                let sp = 0;
+                return 0;  // overflow
+            }
+            let suby = suby + suby;
+        }
+        while (~(sp = 0)) {
+            let sp = sp - 1;
+            let suby = stack[sp];
+            if (~(suby > subx)) {
+                let result = result + result + 1;
+                let subx = subx - suby;
+            } else {
+                let result = result + result;
+            }
+        }
+        if (negative) {
+            return -result;
+        }
+        else {
+            return result;
+        }
+    }
+
+    function int divide_by_2(int x) {
+    // assume inputs are positive and less than 512
+        var int result, subx;
+        var int i, twoToi;
+        let result = 0;
+        let subx = x;
+        let i = 1;  // 2^1 = 2
+        while (~(twoToThe[i] > subx)) {
+            let i = i + 1;
+        }
+        while (i > 1) {
+            let i = i - 1;
+            let twoToi = twoToThe[i];
+            if (~(twoToi > subx)) {
+                let result = result + result + 1;
+                let subx = subx - twoToi;
+            } else {
+                let result = result + result;
+            }
+        }
+        return result;
+    }
+    
+    function int divide_by_16(int x) {
+    // assume inputs are positive and less than 512
+        var int result, subx;
+        var int i, twoToi;
+        let result = 0;
+        let subx = x;
+        let i = 4;  // 2^4 = 16
+        while (~(twoToThe[i] > subx)) {
+            let i = i + 1;
+        }
+        while (i > 4) {
+            let i = i - 1;
+            let twoToi = twoToThe[i];
+            if (~(twoToi > subx)) {
+                let result = result + result + 1;
+                let subx = subx - twoToi;
+            } else {
+                let result = result + result;
+            }
+        }
+        return result;
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+        var int result, i;
+        var int tmp, tmp2;
+        let result = 0;
+        let i = 7;  // INT_MAX is 32767, 2^15 - 1
+        while(~(i < 0)) {
+            let tmp = result + twoToThe[i];
+            let tmp2 = Math.multiply(tmp, tmp);
+            if (~(tmp2 > x) & (tmp2 > 0)) {
+                let result = tmp;
+            }
+            let i = i - 1;
+        }
+        return result;
+    }
+
+    /** Returns the greater number. */
+    function int max(int x, int y) {
+        if (x < y) {
+            return y;
+        }
+        return x;
+    }
+
+    /** Returns the smaller number. */
+    function int min(int x, int y) {
+        if (x < y) {
+            return x;
+        }
+        return y;
+    }
+
+    function int mod(int x, int y) {
+    // assume inputs are positive
+        var int subx, suby;
+        if (y = 0) {
+            return 0;  // Error, divide by zero
+        }
+        let subx = x;
+        let suby = y;
+        let sp = 0;
+        while ((~(suby > subx)) & (suby > 0)) {
+            let stack[sp] = suby;
+            let sp = sp + 1;
+            if (sp > 16) {
+                let sp = 0;
+                return 0;  // overflow
+            }
+            let suby = suby + suby;
+        }
+        while (~(sp = 0)) {
+            let sp = sp - 1;
+            let suby = stack[sp];
+            if (suby < 0) {
+                return 0;  // overflow
+            }
+            if (~(suby > subx)) {
+                let subx = subx - suby;
+            }
+        }
+        return subx;
+    }
+}

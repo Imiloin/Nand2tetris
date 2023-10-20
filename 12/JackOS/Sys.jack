@@ -1,0 +1,65 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Sys.jack
+
+/**
+ * A library that supports various program execution services.
+ */
+class Sys {
+    static int scale_factor, scale_factor2;
+
+    /** Performs all the initializations required by the OS. */
+    function void init() {
+        do Memory.init();
+        do Math.init();
+        do Screen.init();
+        do Output.init();
+        do Keyboard.init();
+        let scale_factor = 32767;  // used by Sys.wait(), can be changed
+        let scale_factor2 = 18000;  // ^2
+        do Main.main();
+        do Sys.halt();
+        return;
+    }
+
+    /** Halts the program execution. */
+    function void halt() {
+        var int i;
+        while (true) {
+            let i = 0;
+        }
+        return;
+    }
+
+    /** Waits approximately duration milliseconds and returns.  */
+    function void wait(int duration) {
+        var int i, j, k, l;
+        let i = 0;
+        let j = 0;
+        let k = 0;
+        let l = 0;
+        while (i < duration) {
+            while (j < scale_factor) {
+                while (k < scale_factor2) {
+                    while (l < scale_factor2) {
+                        let l = l + 1;
+                    }
+                    let k = k + 1;
+                }
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Displays the given error code in the form "ERR<errorCode>",
+     *  and halts the program's execution. */
+    function void error(int errorCode) {
+        do Output.printString("ERR");
+        do Output.printInt(errorCode);
+        do Sys.halt();
+        return;
+    }
+}

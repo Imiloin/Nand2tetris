@@ -1,0 +1,283 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Screen.jack
+
+// *** need Math.jack
+
+/**
+ * A library of functions for displaying graphics on the screen.
+ * The Hack physical screen consists of 256 rows (indexed 0..255, top to bottom)
+ * of 512 pixels each (indexed 0..511, left to right). The top left pixel on 
+ * the screen is indexed (0,0).
+ */
+class Screen {
+    static Array screen;  // from 16384 to 24575
+    static int length;  // 8192
+    static boolean color;  // black = true, white = false
+
+    /** Initializes the Screen. */
+    function void init() {
+        let screen = 16384;
+        let length = 8192;
+        let color = true;
+        do Screen.clearScreen();
+        return;
+    }
+
+    /** Erases the entire screen. */
+    function void clearScreen() {
+        var int i;
+        let i = 0;
+        while (i < length) {
+            let screen[i] = 0;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Sets the current color, to be used for all subsequent drawXXX commands.
+     *  Black is represented by true, white by false. */
+    function void setColor(boolean b) {
+        let color = b;
+        return;
+    }
+
+    /** Draws the (x,y) pixel, using the current color. */
+    function void drawPixel(int x, int y) {
+        var int address, value;
+        let address = screen + Math.multiply_by_32(y) + Math.divide_by_16(x);
+        let value = Memory.peek(address);
+        if (color) {
+            let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+        }
+        else {
+            let value = value & ~(Math.getTwoToThe(x & 15));
+        }
+        do Memory.poke(address, value);
+        return;
+    }
+
+    /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+    function void drawLine(int x1, int y1, int x2, int y2) {
+    // include (x1,y1) and (x2,y2)
+        var int dx, dy;
+        var int a, b, det;  // det = (a.next * dy) - (b.next * dx)
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let a = 0;
+        let b = 0;
+        do Screen.drawPixel(x1, y1);
+        if (dx > 0){
+            if (dy > 0){  // dx > 0, dy > 0
+                let det = dy - dx;
+                while ((a < dx) | (b < dy)) {
+                    if (det > 0) {
+                        let b = b + 1;
+                        let det = det - dx;
+                    }
+                    else {
+                        let a = a + 1;
+                        let det = det + dy;
+                    }
+                    do Screen.drawPixel(x1+a, y1+b);
+                }
+                return;
+            }
+            else {
+                if (dy < 0){  // dx > 0, dy < 0
+                    let det = dy + dx;
+                    while ((a < dx) | (b > dy)) {
+                        if (det > 0) {
+                            let a = a + 1;
+                            let det = det + dy;
+                        }
+                        else {
+                            let b = b - 1;
+                            let det = det + dx;
+                        }
+                        do Screen.drawPixel(x1+a, y1+b);
+                    }
+                    return;
+                }
+                else {  // dx > 0, dy == 0
+                    do Screen.drawHorizontalLine(x1, x2, y1);
+                    return;
+                }
+            }
+        }
+        else {
+            if (dx < 0) {
+                if (dy > 0){  // dx < 0, dy > 0
+                    let det = (- dy) - dx;
+                    while ((a > dx) | (b < dy)) {
+                        if (det > 0) {
+                            let a = a - 1;
+                            let det = det - dy;
+                        }
+                        else {
+                            let b = b + 1;
+                            let det = det - dx;
+                        }
+                        do Screen.drawPixel(x1+a, y1+b);
+                    }
+                    return;
+                }
+                else {
+                    if (dy < 0){  // dx < 0, dy < 0
+                        let det = dx - dy;
+                        while ((a > dx) | (b > dy)) {
+                            if (det > 0) {
+                                let b = b - 1;
+                                let det = det + dx;
+                            }
+                            else {
+                                let a = a - 1;
+                                let det = det - dy;
+                            }
+                            do Screen.drawPixel(x1+a, y1+b);
+                        }
+                        return;
+                    }
+                    else {  // dx < 0, dy == 0
+                        do Screen.drawHorizontalLine(x2, x1, y1);
+                        return;
+                    }
+                }
+            }
+            else {
+                if (dy > 0){  // dx == 0, dy > 0
+                    while (b < dy) {
+                        let b = b + 1;
+                        do Screen.drawPixel(x1, y1+b);
+                    }
+                    return;
+                }
+                else {
+                    if (dy < 0){  // dx == 0, dy < 0
+                        while (b > dy) {
+                            let b = b - 1;
+                            do Screen.drawPixel(x1, y1+b);
+                        }
+                        return;
+                    }
+                    else {  // dx == 0, dy == 0
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    function void drawHorizontalLine(int x1, int x2, int y) {
+    // assume x1 <= x2, optimized for better performance
+        var int x, addr, value;
+        let x = x1;
+        let addr = screen + Math.multiply_by_32(y) + Math.divide_by_16(x);
+        let value = (Math.divide_by_16(x2) - Math.divide_by_16(x1));
+        if (value > 1) {  // value >= 2
+            if (~((x & 15) = 0)) {
+                let value = Memory.peek(addr);
+                while (~((x & 15) = 0)) {
+                    if (color) {
+                        let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+                    }
+                    else {
+                        let value = value & ~(Math.getTwoToThe(x & 15));
+                    }
+                    let x = x + 1;
+                }
+                do Memory.poke(addr, value);
+                let addr = addr + 1;
+            }
+            let x = x + 16;  // x = real x + 16
+            while (~(x > x2)) {
+                if (color) {
+                    do Memory.poke(addr, -1);
+                }
+                else {
+                    do Memory.poke(addr, 0);
+                }
+                let addr = addr + 1;
+                let x = x + 16;
+            }
+            let x = x - 16;
+            let value = Memory.peek(addr);
+            while (~(x > x2)) {
+                if (color) {
+                    let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+                }
+                else {
+                    let value = value & ~(Math.getTwoToThe(x & 15));
+                }
+                let x = x + 1;
+            }
+            do Memory.poke(addr, value);
+        }
+        else {
+            if (value = 1) {  // value == 1
+                let value = Memory.peek(addr);
+                while (~((x & 15) = 0)) {
+                    if (color) {
+                        let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+                    }
+                    else {
+                        let value = value & ~(Math.getTwoToThe(x & 15));
+                    }
+                    let x = x + 1;
+                }
+                do Memory.poke(addr, value);
+                let addr = addr + 1;
+                let value = Memory.peek(addr);
+                while (~(x > x2)) {
+                    if (color) {
+                        let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+                    }
+                    else {
+                        let value = value & ~(Math.getTwoToThe(x & 15));
+                    }
+                    let x = x + 1;
+                }
+                do Memory.poke(addr, value);
+            }
+            else {  // value == 0
+                let value = Memory.peek(addr);
+                while (~(x > x2)) {
+                    if (color) {
+                        let value = value | Math.getTwoToThe(x & 15);  // x & 15 == x % 16 (positive)
+                    }
+                    else {
+                        let value = value & ~(Math.getTwoToThe(x & 15));
+                    }
+                    let x = x + 1;
+                }
+                do Memory.poke(addr, value);
+            }
+        }
+        return;
+    }
+
+    /** Draws a filled rectangle whose top left corner is (x1, y1)
+     * and bottom right corner is (x2,y2), using the current color. */
+    function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int y;
+        let y = y1;
+        while (~(y > y2)) {
+            do Screen.drawHorizontalLine(x1, x2, y);
+            let y = y + 1;
+        }
+        return;
+    }
+
+    /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
+    function void drawCircle(int x, int y, int r) {
+        var int dx, dy;
+        let dy = -r;
+        while (~(dy > r)) {
+            let dx = Math.sqrt((r*r) - (dy*dy));
+            do Screen.drawHorizontalLine(x-dx, x+dx, y+dy);
+            let dy = dy + 1;
+        }
+        return;
+    }
+}

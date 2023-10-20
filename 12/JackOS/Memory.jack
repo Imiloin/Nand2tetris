@@ -1,0 +1,190 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+class Memory {
+    static Array ram;
+    static Array heap;
+    static Array freeList;
+    static Array last;
+
+    /** Initializes the class. */
+    function void init() {
+        let ram = 0;
+        let heap = 2048;  // heapBase
+        let freeList = heap;
+        let heap[0] = null;  // next
+        let heap[1] = 14334;  // length
+        let last = freeList;
+        return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let ram[address] = value;
+        return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function Array alloc(int size) {
+    // first fit
+        var int objSize, value;
+        var Array prev, current, obj;
+        let objSize = size + 2;
+        let current = freeList;
+        let prev = null;
+        while (~(current = null)) {
+            let value = current[1];
+            if (~(value < objSize)) {  // fit
+                let obj = current + value - size;
+                let obj[0] = null;
+                let obj[1] = size;
+                let current[1] = value - objSize;  // can be 0
+                return obj + 2;  // block address
+            }
+            let prev = current;
+            let current = current[0];
+        }
+        do Memory.merge();
+        return Memory.alloc(size);
+    }
+
+    function Array _alloc(int size) {
+    // best fit
+        var int objSize, value, left, current_left, best_value;
+        var Array prev, current, obj, best;
+        let objSize = size + 2;
+        let left = 14334;  // size of heap
+        let current = freeList;
+        let prev = null;
+        let best = null;
+        while (~(current = null)) {
+            let value = current[1];
+            let current_left = value - objSize;
+            if ((~(current_left < 0)) & (current_left < left)) {  // best fit
+                let best = current;
+                let best_value = value;
+            }
+            let prev = current;
+            let current = current[0];
+        }
+        if (~(best = null)) {
+            let obj = best + best_value - size;
+            let obj[0] = null;
+            let obj[1] = size;
+            let best[1] = best_value - objSize;  // can be 0
+            return obj + 2;  // block address
+        } else {
+            do Memory.merge();
+            return Memory.alloc(size);
+        }
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void _deAlloc(Array o) {
+    // add to last
+        let last[0] = o - 2;
+        let last = o - 2;
+        return;
+    }
+
+    function void deAlloc(Array o) {
+    // add in order
+        var Array deAllocBlock;
+        var Array prev, current;
+        let deAllocBlock = o - 2;
+        let prev = null;
+        let current = freeList;
+        while (~(current = null) & (deAllocBlock > current)) {
+            let prev = current;
+            let current = current[0];
+        }
+        if (current = null){  // add to last
+            let last[0] = o - 2;
+            let last = o - 2;
+            return;
+        } else {
+            if (prev = null) {  // add to first
+                let freeList = deAllocBlock;
+            } else {  // add to middle
+                let prev[0] = deAllocBlock;
+            }
+            let deAllocBlock[0] = current;
+            return;
+        }
+    }
+
+    // if you want to use this, deAlloc function should in "add in order" mode
+    /** merge adjacent free blocks */
+    function void merge() {
+        var Array current, next;
+        var Array newNext;
+        var int current_size, next_size;
+        var int i;
+        let current = freeList;
+        let next = current[0];
+        while (~(next = null)) {
+            let current_size = current[1];
+            if (next = (current_size + current + 2)) {
+                let next_size = next[1];
+                let newNext = next[0];
+                let current[0] = newNext;
+                let current[1] = (current_size + next_size + 2);
+                let next = newNext;
+            } else {
+                let current = next;
+                let next = current[0];
+            }
+        }
+        return;
+    }
+    
+    // this function is wrong, it is difficult to find the corresponding pointers to the blocks due to jack's specification
+    // if you want to use this, deAlloc function should in "add in order" mode
+    /*
+    function void deFrag() {
+        var Array current, next, prev;
+        var Array newNext, newCurrent;
+        var int current_size, next_size;
+        var int i, block_size;
+        let current = freeList;
+        let prev = null;
+        let next = current[0];
+        while (~(next = null)) {
+            let current_size = current[1];
+            let next_size = next[1];
+            let newNext = next[0];
+            let block_size = (next - current_size - current - 2);
+            let i = 0;
+            while (i < block_size) {
+                let current[i] = current[i + current_size + 2];
+                let i = i + 1;
+            }
+            let newCurrent = (current + block_size);
+            let newCurrent[0] = newNext;
+            let newCurrent[1] = (current_size + next_size + 2);
+            if (~(prev = null)) {
+                let prev[0] = newCurrent;
+            } else {
+                let freeList = newCurrent;
+            }
+            let next = newNext;
+            let current = newCurrent;
+        }
+        return;
+    }
+    */
+}

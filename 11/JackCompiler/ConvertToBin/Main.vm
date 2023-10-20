@@ -1,0 +1,153 @@
+// File name: ConvertToBin\Main.vm
+// line 21: class Main { 
+// line 21: function void main 
+// line 27: ( ) { 
+// line 27: var value ; 
+function Main.main 1
+push constant 8001
+push constant 16
+push constant 1
+neg
+call Main.fillMemory 3
+pop temp 0
+// line 28: do Main . fillMemory ( 8001 , 16 , - 1 ) ; 
+push constant 8000
+call Memory.peek 1
+pop local 0
+// line 29: let value = Memory . peek ( 8000 ) ; 
+push local 0
+call Main.convert 1
+pop temp 0
+// line 30: do Main . convert ( value ) ; 
+push constant 0
+return
+// line 31: return ; 
+// line 33: } function void convert 
+// line 37: ( value ) { 
+// line 37: var mask , position ; 
+// line 38: var loop ; 
+function Main.convert 3
+push constant 0
+not
+pop local 2
+// line 39: let loop = true ; 
+label WHILE_EXP0
+push local 2
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+add
+pop local 1
+// line 41: while ( loop ) { let position = position + 1 ; 
+push local 0
+call Main.nextMask 1
+pop local 0
+// line 43: let mask = Main . nextMask ( mask ) ; 
+push local 1
+push constant 16
+gt
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+// line 44: if ( ~ ( position > 16 ) ) { 
+push argument 0
+push local 0
+and
+push constant 0
+eq
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+// line 46: if ( ~ ( ( value & mask ) = 0 ) ) { 
+push constant 8000
+push local 1
+add
+push constant 1
+call Memory.poke 2
+pop temp 0
+// line 48: do Memory . poke ( 8000 + position , 1 ) ; 
+// line 49: } 
+goto IF_END1
+label IF_FALSE1
+// line 50: else { 
+push constant 8000
+push local 1
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+// line 51: do Memory . poke ( 8000 + position , 0 ) ; 
+label IF_END1
+// line 52: } 
+// line 53: } 
+goto IF_END0
+label IF_FALSE0
+// line 54: else { 
+push constant 0
+pop local 2
+// line 55: let loop = false ; 
+label IF_END0
+// line 56: } 
+goto WHILE_EXP0
+label WHILE_END0
+// line 57: } 
+push constant 0
+return
+// line 58: return ; 
+// line 60: } function nextMask 
+// line 63: ( mask ) { 
+function Main.nextMask 0
+push argument 0
+push constant 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+// line 63: if ( mask = 0 ) { 
+push constant 1
+return
+// line 64: return 1 ; 
+// line 66: } 
+goto IF_END2
+label IF_FALSE2
+// line 66: else { 
+push argument 0
+push constant 2
+call Math.multiply 2
+return
+// line 67: return mask * 2 ; 
+label IF_END2
+// line 69: } 
+// line 69: } function void fillMemory 
+// line 74: ( startAddress , length , value ) { 
+function Main.fillMemory 0
+label WHILE_EXP1
+push argument 1
+push constant 0
+gt
+not
+if-goto WHILE_END1
+push argument 0
+push argument 2
+call Memory.poke 2
+pop temp 0
+// line 74: while ( length > 0 ) { do Memory . poke ( startAddress , value ) ; 
+push argument 1
+push constant 1
+sub
+pop argument 1
+// line 76: let length = length - 1 ; 
+push argument 0
+push constant 1
+add
+pop argument 0
+// line 77: let startAddress = startAddress + 1 ; 
+goto WHILE_EXP1
+label WHILE_END1
+// line 78: } 
+push constant 0
+return
+// line 79: return ; 

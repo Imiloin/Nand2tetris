@@ -1,0 +1,420 @@
+// File name: Pong\PongGame.vm
+// line 9: class PongGame { 
+// line 9: static PongGame instance 
+// line 11: field Bat bat 
+// line 12: field Ball ball 
+// line 13: field wall 
+// line 14: field exit 
+// line 15: field score 
+// line 16: field lastWall 
+// line 17: field batWidth 
+// line 20: constructor PongGame new 
+// line 23: ( ) { 
+function PongGame.new 0
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+// line 23: do Screen . clearScreen ( ) ; 
+push constant 50
+pop this 6
+// line 24: let batWidth = 50 ; 
+push constant 230
+push constant 229
+push this 6
+push constant 7
+call Bat.new 4
+pop this 0
+// line 25: let bat = Bat . new ( 230 , 229 , batWidth , 7 ) ; 
+push constant 253
+push constant 222
+push constant 0
+push constant 511
+push constant 0
+push constant 229
+call Ball.new 6
+pop this 1
+// line 26: let ball = Ball . new ( 253 , 222 , 0 , 511 , 0 , 229 ) ; 
+push this 1
+push constant 400
+push constant 0
+call Ball.setDestination 3
+pop temp 0
+// line 27: do ball . setDestination ( 400 , 0 ) ; 
+push constant 0
+push constant 238
+push constant 511
+push constant 240
+call Screen.drawRectangle 4
+pop temp 0
+// line 28: do Screen . drawRectangle ( 0 , 238 , 511 , 240 ) ; 
+push constant 22
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+// line 29: do Output . moveCursor ( 22 , 0 ) ; 
+push constant 8
+call String.new 1
+push constant 83
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 48
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+// line 30: do Output . printString ( Score: 0 ) ; 
+push constant 0
+pop this 3
+// line 31: let exit = false ; 
+push constant 0
+pop this 4
+// line 33: let score = 0 ; 
+push constant 0
+pop this 2
+// line 34: let wall = 0 ; 
+push constant 0
+pop this 5
+// line 35: let lastWall = 0 ; 
+push pointer 0
+return
+// line 36: return this ; 
+// line 39: } method void dispose 
+// line 42: ( ) { 
+function PongGame.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Bat.dispose 1
+pop temp 0
+// line 42: do bat . dispose ( ) ; 
+push this 1
+call Ball.dispose 1
+pop temp 0
+// line 43: do ball . dispose ( ) ; 
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+// line 44: do Memory . deAlloc ( this ) ; 
+push constant 0
+return
+// line 45: return ; 
+// line 47: } function void newInstance 
+// line 50: ( ) { 
+function PongGame.newInstance 0
+call PongGame.new 0
+pop static 0
+// line 50: let instance = PongGame . new ( ) ; 
+push constant 0
+return
+// line 51: return ; 
+// line 53: } function PongGame getInstance 
+// line 56: ( ) { 
+function PongGame.getInstance 0
+push static 0
+return
+// line 56: return instance ; 
+// line 58: } method void run 
+// line 62: ( ) { 
+// line 62: var key ; 
+function PongGame.run 1
+push argument 0
+pop pointer 0
+label WHILE_EXP0
+push this 3
+not
+not
+if-goto WHILE_END0
+label WHILE_EXP1
+push local 0
+push constant 0
+eq
+push this 3
+not
+and
+not
+if-goto WHILE_END1
+call Keyboard.keyPressed 0
+pop local 0
+// line 63: while ( ~ exit ) { while ( ( key = 0 ) & ( ~ exit ) ) { let key = Keyboard . keyPressed ( ) ; 
+push this 0
+call Bat.move 1
+pop temp 0
+// line 68: do bat . move ( ) ; 
+push pointer 0
+call PongGame.moveBall 1
+pop temp 0
+// line 69: do moveBall ( ) ; 
+push constant 50
+call Sys.wait 1
+pop temp 0
+// line 70: do Sys . wait ( 50 ) ; 
+goto WHILE_EXP1
+label WHILE_END1
+// line 71: } 
+push local 0
+push constant 130
+eq
+if-goto IF_TRUE20
+goto IF_FALSE20
+label IF_TRUE20
+// line 72: if ( key = 130 ) { 
+push this 0
+push constant 1
+call Bat.setDirection 2
+pop temp 0
+// line 74: do bat . setDirection ( 1 ) ; 
+// line 74: } 
+goto IF_END20
+label IF_FALSE20
+// line 74: else { 
+push local 0
+push constant 132
+eq
+if-goto IF_TRUE21
+goto IF_FALSE21
+label IF_TRUE21
+// line 75: if ( key = 132 ) { 
+push this 0
+push constant 2
+call Bat.setDirection 2
+pop temp 0
+// line 76: do bat . setDirection ( 2 ) ; 
+// line 76: } 
+goto IF_END21
+label IF_FALSE21
+// line 76: else { 
+push local 0
+push constant 140
+eq
+if-goto IF_TRUE22
+goto IF_FALSE22
+label IF_TRUE22
+// line 77: if ( key = 140 ) { 
+push constant 0
+not
+pop this 3
+// line 78: let exit = true ; 
+// line 78: } 
+label IF_FALSE22
+label IF_END21
+// line 78: } 
+label IF_END20
+// line 79: } 
+label WHILE_EXP2
+push local 0
+push constant 0
+eq
+not
+push this 3
+not
+and
+not
+if-goto WHILE_END2
+call Keyboard.keyPressed 0
+pop local 0
+// line 80: while ( ( ~ ( key = 0 ) ) & ( ~ exit ) ) { let key = Keyboard . keyPressed ( ) ; 
+push this 0
+call Bat.move 1
+pop temp 0
+// line 84: do bat . move ( ) ; 
+push pointer 0
+call PongGame.moveBall 1
+pop temp 0
+// line 85: do moveBall ( ) ; 
+push constant 50
+call Sys.wait 1
+pop temp 0
+// line 86: do Sys . wait ( 50 ) ; 
+goto WHILE_EXP2
+label WHILE_END2
+// line 87: } 
+goto WHILE_EXP0
+label WHILE_END0
+// line 88: } 
+push this 3
+if-goto IF_TRUE23
+goto IF_FALSE23
+label IF_TRUE23
+// line 89: if ( exit ) { 
+push constant 10
+push constant 27
+call Output.moveCursor 2
+pop temp 0
+// line 91: do Output . moveCursor ( 10 , 27 ) ; 
+push constant 9
+call String.new 1
+push constant 71
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 109
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+// line 92: do Output . printString ( Game Over ) ; 
+// line 93: } 
+label IF_FALSE23
+push constant 0
+return
+// line 94: return ; 
+// line 97: } method void moveBall 
+// line 105: ( ) { 
+// line 105: var bouncingDirection , batLeft , batRight , ballLeft , ballRight ; 
+function PongGame.moveBall 5
+push argument 0
+pop pointer 0
+push this 1
+call Ball.move 1
+pop this 2
+// line 106: let wall = ball . move ( ) ; 
+push this 2
+push constant 0
+gt
+push this 2
+push this 5
+eq
+not
+and
+if-goto IF_TRUE24
+goto IF_FALSE24
+label IF_TRUE24
+// line 108: if ( ( wall > 0 ) & ( ~ ( wall = lastWall ) ) ) { 
+push this 2
+pop this 5
+// line 110: let lastWall = wall ; 
+push constant 0
+pop local 0
+// line 111: let bouncingDirection = 0 ; 
+push this 0
+call Bat.getLeft 1
+pop local 1
+// line 112: let batLeft = bat . getLeft ( ) ; 
+push this 0
+call Bat.getRight 1
+pop local 2
+// line 113: let batRight = bat . getRight ( ) ; 
+push this 1
+call Ball.getLeft 1
+pop local 3
+// line 114: let ballLeft = ball . getLeft ( ) ; 
+push this 1
+call Ball.getRight 1
+pop local 4
+// line 115: let ballRight = ball . getRight ( ) ; 
+push this 2
+push constant 4
+eq
+if-goto IF_TRUE25
+goto IF_FALSE25
+label IF_TRUE25
+// line 116: if ( wall = 4 ) { 
+push local 1
+push local 4
+gt
+push local 2
+push local 3
+lt
+or
+pop this 3
+// line 118: let exit = ( batLeft > ballRight ) | ( batRight < ballLeft ) ; 
+push this 3
+not
+if-goto IF_TRUE26
+goto IF_FALSE26
+label IF_TRUE26
+// line 119: if ( ~ exit ) { 
+push local 4
+push local 1
+push constant 10
+add
+lt
+if-goto IF_TRUE27
+goto IF_FALSE27
+label IF_TRUE27
+// line 120: if ( ballRight < ( batLeft + 10 ) ) { 
+push constant 1
+neg
+pop local 0
+// line 121: let bouncingDirection = - 1 ; 
+// line 121: } 
+goto IF_END27
+label IF_FALSE27
+// line 121: else { 
+push local 3
+push local 2
+push constant 10
+sub
+gt
+if-goto IF_TRUE28
+goto IF_FALSE28
+label IF_TRUE28
+// line 122: if ( ballLeft > ( batRight - 10 ) ) { 
+push constant 1
+pop local 0
+// line 123: let bouncingDirection = 1 ; 
+// line 123: } 
+label IF_FALSE28
+label IF_END27
+// line 123: } 
+push this 6
+push constant 2
+sub
+pop this 6
+// line 124: let batWidth = batWidth - 2 ; 
+push this 0
+push this 6
+call Bat.setWidth 2
+pop temp 0
+// line 126: do bat . setWidth ( batWidth ) ; 
+push this 4
+push constant 1
+add
+pop this 4
+// line 127: let score = score + 1 ; 
+push constant 22
+push constant 7
+call Output.moveCursor 2
+pop temp 0
+// line 128: do Output . moveCursor ( 22 , 7 ) ; 
+push this 4
+call Output.printInt 1
+pop temp 0
+// line 129: do Output . printInt ( score ) ; 
+// line 130: } 
+label IF_FALSE26
+// line 131: } 
+label IF_FALSE25
+push this 1
+push local 0
+call Ball.bounce 2
+pop temp 0
+// line 132: do ball . bounce ( bouncingDirection ) ; 
+// line 133: } 
+label IF_FALSE24
+push constant 0
+return
+// line 134: return ; 

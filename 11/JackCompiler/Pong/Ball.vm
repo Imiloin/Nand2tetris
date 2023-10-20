@@ -1,0 +1,611 @@
+// File name: Pong\Ball.vm
+// line 11: class Ball { 
+// line 11: field x , y 
+// line 13: field lengthx , lengthy 
+// line 14: field d , straightD , diagonalD 
+// line 16: field invert , positivex , positivey 
+// line 17: field leftWall , rightWall , topWall , bottomWall 
+// line 19: field wall 
+// line 21: constructor Ball new 
+// line 24: ( Ax , Ay , AleftWall , ArightWall , AtopWall , AbottomWall ) { 
+function Ball.new 0
+push constant 15
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+// line 25: let x = Ax ; 
+push argument 1
+pop this 1
+// line 26: let y = Ay ; 
+push argument 2
+pop this 10
+// line 27: let leftWall = AleftWall ; 
+push argument 3
+push constant 6
+sub
+pop this 11
+// line 28: let rightWall = ArightWall - 6 ; 
+push argument 4
+pop this 12
+// line 29: let topWall = AtopWall ; 
+push argument 5
+push constant 6
+sub
+pop this 13
+// line 30: let bottomWall = AbottomWall - 6 ; 
+push constant 0
+pop this 14
+// line 31: let wall = 0 ; 
+push pointer 0
+call Ball.show 1
+pop temp 0
+// line 32: do show ( ) ; 
+push pointer 0
+return
+// line 33: return this ; 
+// line 35: } method void dispose 
+// line 38: ( ) { 
+function Ball.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+// line 38: do Memory . deAlloc ( this ) ; 
+push constant 0
+return
+// line 39: return ; 
+// line 41: } method void show 
+// line 44: ( ) { 
+function Ball.show 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 44: do Screen . setColor ( true ) ; 
+push pointer 0
+call Ball.draw 1
+pop temp 0
+// line 45: do draw ( ) ; 
+push constant 0
+return
+// line 46: return ; 
+// line 48: } method void hide 
+// line 51: ( ) { 
+function Ball.hide 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 51: do Screen . setColor ( false ) ; 
+push pointer 0
+call Ball.draw 1
+pop temp 0
+// line 52: do draw ( ) ; 
+push constant 0
+return
+// line 53: return ; 
+// line 55: } method void draw 
+// line 58: ( ) { 
+function Ball.draw 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 58: do Screen . drawRectangle ( x , y , x + 5 , y + 5 ) ; 
+push constant 0
+return
+// line 59: return ; 
+// line 61: } method getLeft 
+// line 64: ( ) { 
+function Ball.getLeft 0
+push argument 0
+pop pointer 0
+push this 0
+return
+// line 64: return x ; 
+// line 66: } method getRight 
+// line 69: ( ) { 
+function Ball.getRight 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 5
+add
+return
+// line 69: return x + 5 ; 
+// line 71: } method void setDestination 
+// line 74: ( destx , desty ) { 
+// line 74: var dx , dy , temp ; 
+function Ball.setDestination 3
+push argument 0
+pop pointer 0
+push argument 1
+push this 0
+sub
+pop this 2
+// line 75: let lengthx = destx - x ; 
+push argument 2
+push this 1
+sub
+pop this 3
+// line 76: let lengthy = desty - y ; 
+push this 2
+call Math.abs 1
+pop local 0
+// line 77: let dx = Math . abs ( lengthx ) ; 
+push this 3
+call Math.abs 1
+pop local 1
+// line 78: let dy = Math . abs ( lengthy ) ; 
+push local 0
+push local 1
+lt
+pop this 7
+// line 79: let invert = ( dx < dy ) ; 
+push this 7
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+// line 80: if ( invert ) { 
+push local 0
+pop local 2
+// line 82: let temp = dx ; 
+push local 1
+pop local 0
+// line 83: let dx = dy ; 
+push local 2
+pop local 1
+// line 84: let dy = temp ; 
+push this 1
+push argument 2
+lt
+pop this 8
+// line 85: let positivex = ( y < desty ) ; 
+push this 0
+push argument 1
+lt
+pop this 9
+// line 86: let positivey = ( x < destx ) ; 
+// line 87: } 
+goto IF_END0
+label IF_FALSE0
+// line 88: else { 
+push this 0
+push argument 1
+lt
+pop this 8
+// line 89: let positivex = ( x < destx ) ; 
+push this 1
+push argument 2
+lt
+pop this 9
+// line 90: let positivey = ( y < desty ) ; 
+label IF_END0
+// line 91: } 
+push constant 2
+push local 1
+call Math.multiply 2
+push local 0
+sub
+pop this 4
+// line 92: let d = ( 2 * dy ) - dx ; 
+push constant 2
+push local 1
+call Math.multiply 2
+pop this 5
+// line 94: let straightD = 2 * dy ; 
+push constant 2
+push local 1
+push local 0
+sub
+call Math.multiply 2
+pop this 6
+// line 95: let diagonalD = 2 * ( dy - dx ) ; 
+push constant 0
+return
+// line 96: return ; 
+// line 99: } method move 
+// line 107: ( ) { 
+function Ball.move 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ball.hide 1
+pop temp 0
+// line 107: do hide ( ) ; 
+push this 4
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+// line 109: if ( d < 0 ) { 
+push this 4
+push this 5
+add
+pop this 4
+// line 111: let d = d + straightD ; 
+// line 111: } 
+goto IF_END1
+label IF_FALSE1
+// line 111: else { 
+push this 4
+push this 6
+add
+pop this 4
+// line 112: let d = d + diagonalD ; 
+push this 9
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+// line 113: if ( positivey ) { 
+push this 7
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+// line 115: if ( invert ) { 
+push this 0
+push constant 4
+add
+pop this 0
+// line 116: let x = x + 4 ; 
+// line 116: } 
+goto IF_END3
+label IF_FALSE3
+// line 116: else { 
+push this 1
+push constant 4
+add
+pop this 1
+// line 117: let y = y + 4 ; 
+label IF_END3
+// line 117: } 
+// line 117: } 
+goto IF_END2
+label IF_FALSE2
+// line 118: else { 
+push this 7
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+// line 119: if ( invert ) { 
+push this 0
+push constant 4
+sub
+pop this 0
+// line 120: let x = x - 4 ; 
+// line 120: } 
+goto IF_END4
+label IF_FALSE4
+// line 120: else { 
+push this 1
+push constant 4
+sub
+pop this 1
+// line 121: let y = y - 4 ; 
+label IF_END4
+// line 121: } 
+label IF_END2
+// line 121: } 
+label IF_END1
+// line 122: } 
+push this 8
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+// line 123: if ( positivex ) { 
+push this 7
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+// line 125: if ( invert ) { 
+push this 1
+push constant 4
+add
+pop this 1
+// line 126: let y = y + 4 ; 
+// line 126: } 
+goto IF_END6
+label IF_FALSE6
+// line 126: else { 
+push this 0
+push constant 4
+add
+pop this 0
+// line 127: let x = x + 4 ; 
+label IF_END6
+// line 127: } 
+// line 127: } 
+goto IF_END5
+label IF_FALSE5
+// line 128: else { 
+push this 7
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+// line 129: if ( invert ) { 
+push this 1
+push constant 4
+sub
+pop this 1
+// line 130: let y = y - 4 ; 
+// line 130: } 
+goto IF_END7
+label IF_FALSE7
+// line 130: else { 
+push this 0
+push constant 4
+sub
+pop this 0
+// line 131: let x = x - 4 ; 
+label IF_END7
+// line 131: } 
+label IF_END5
+// line 131: } 
+push this 0
+push this 10
+gt
+not
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+// line 132: if ( ~ ( x > leftWall ) ) { 
+push constant 1
+pop this 14
+// line 134: let wall = 1 ; 
+push this 10
+pop this 0
+// line 135: let x = leftWall ; 
+// line 136: } 
+label IF_FALSE8
+push this 0
+push this 11
+lt
+not
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+// line 137: if ( ~ ( x < rightWall ) ) { 
+push constant 2
+pop this 14
+// line 138: let wall = 2 ; 
+push this 11
+pop this 0
+// line 139: let x = rightWall ; 
+// line 140: } 
+label IF_FALSE9
+push this 1
+push this 12
+gt
+not
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+// line 141: if ( ~ ( y > topWall ) ) { 
+push constant 3
+pop this 14
+// line 142: let wall = 3 ; 
+push this 12
+pop this 1
+// line 143: let y = topWall ; 
+// line 144: } 
+label IF_FALSE10
+push this 1
+push this 13
+lt
+not
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+// line 145: if ( ~ ( y < bottomWall ) ) { 
+push constant 4
+pop this 14
+// line 146: let wall = 4 ; 
+push this 13
+pop this 1
+// line 147: let y = bottomWall ; 
+// line 148: } 
+label IF_FALSE11
+push pointer 0
+call Ball.show 1
+pop temp 0
+// line 149: do show ( ) ; 
+push this 14
+return
+// line 151: return wall ; 
+// line 154: } method void bounce 
+// line 161: ( bouncingDirection ) { 
+// line 161: var newx , newy , divLengthx , divLengthy , factor ; 
+function Ball.bounce 5
+push argument 0
+pop pointer 0
+push this 2
+push constant 10
+call Math.divide 2
+pop local 2
+// line 162: let divLengthx = lengthx / 10 ; 
+push this 3
+push constant 10
+call Math.divide 2
+pop local 3
+// line 165: let divLengthy = lengthy / 10 ; 
+push argument 1
+push constant 0
+eq
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+// line 166: if ( bouncingDirection = 0 ) { 
+push constant 10
+pop local 4
+// line 167: let factor = 10 ; 
+// line 167: } 
+goto IF_END12
+label IF_FALSE12
+// line 167: else { 
+push this 2
+push constant 0
+lt
+not
+push argument 1
+push constant 1
+eq
+and
+push this 2
+push constant 0
+lt
+push argument 1
+push constant 1
+neg
+eq
+and
+or
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+// line 168: if ( ( ( ~ ( lengthx < 0 ) ) & ( bouncingDirection = 1 ) ) | ( ( lengthx < 0 ) & ( bouncingDirection = ( - 1 ) ) ) ) { 
+push constant 20
+pop local 4
+// line 169: let factor = 20 ; 
+// line 170: } 
+goto IF_END13
+label IF_FALSE13
+// line 171: else { 
+push constant 5
+pop local 4
+// line 172: let factor = 5 ; 
+label IF_END13
+// line 172: } 
+label IF_END12
+// line 172: } 
+push this 14
+push constant 1
+eq
+if-goto IF_TRUE14
+goto IF_FALSE14
+label IF_TRUE14
+// line 173: if ( wall = 1 ) { 
+push constant 506
+pop local 0
+// line 175: let newx = 506 ; 
+push local 3
+push constant 50
+neg
+call Math.multiply 2
+push local 2
+call Math.divide 2
+pop local 1
+// line 176: let newy = ( divLengthy * ( - 50 ) ) / divLengthx ; 
+push this 1
+push local 1
+push local 4
+call Math.multiply 2
+add
+pop local 1
+// line 177: let newy = y + ( newy * factor ) ; 
+// line 178: } 
+goto IF_END14
+label IF_FALSE14
+// line 179: else { 
+push this 14
+push constant 2
+eq
+if-goto IF_TRUE15
+goto IF_FALSE15
+label IF_TRUE15
+// line 180: if ( wall = 2 ) { 
+push constant 0
+pop local 0
+// line 181: let newx = 0 ; 
+push local 3
+push constant 50
+call Math.multiply 2
+push local 2
+call Math.divide 2
+pop local 1
+// line 182: let newy = ( divLengthy * 50 ) / divLengthx ; 
+push this 1
+push local 1
+push local 4
+call Math.multiply 2
+add
+pop local 1
+// line 183: let newy = y + ( newy * factor ) ; 
+// line 184: } 
+goto IF_END15
+label IF_FALSE15
+// line 185: else { 
+push this 14
+push constant 3
+eq
+if-goto IF_TRUE16
+goto IF_FALSE16
+label IF_TRUE16
+// line 186: if ( wall = 3 ) { 
+push constant 250
+pop local 1
+// line 187: let newy = 250 ; 
+push local 2
+push constant 25
+neg
+call Math.multiply 2
+push local 3
+call Math.divide 2
+pop local 0
+// line 188: let newx = ( divLengthx * ( - 25 ) ) / divLengthy ; 
+push this 0
+push local 0
+push local 4
+call Math.multiply 2
+add
+pop local 0
+// line 189: let newx = x + ( newx * factor ) ; 
+// line 190: } 
+goto IF_END16
+label IF_FALSE16
+// line 191: else { 
+push constant 0
+pop local 1
+// line 192: let newy = 0 ; 
+push local 2
+push constant 25
+call Math.multiply 2
+push local 3
+call Math.divide 2
+pop local 0
+// line 193: let newx = ( divLengthx * 25 ) / divLengthy ; 
+push this 0
+push local 0
+push local 4
+call Math.multiply 2
+add
+pop local 0
+// line 194: let newx = x + ( newx * factor ) ; 
+label IF_END16
+// line 195: } 
+label IF_END15
+// line 196: } 
+label IF_END14
+// line 197: } 
+push pointer 0
+push local 0
+push local 1
+call Ball.setDestination 3
+pop temp 0
+// line 198: do setDestination ( newx , newy ) ; 
+push constant 0
+return
+// line 200: return ; 

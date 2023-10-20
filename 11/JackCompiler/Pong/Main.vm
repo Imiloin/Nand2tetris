@@ -1,0 +1,23 @@
+// File name: Pong\Main.vm
+// line 9: class Main { 
+// line 9: function void main 
+// line 12: ( ) { 
+// line 12: var PongGame game ; 
+function Main.main 1
+call PongGame.newInstance 0
+pop temp 0
+// line 13: do PongGame . newInstance ( ) ; 
+call PongGame.getInstance 0
+pop local 0
+// line 14: let game = PongGame . getInstance ( ) ; 
+push local 0
+call PongGame.run 1
+pop temp 0
+// line 15: do game . run ( ) ; 
+push local 0
+call PongGame.dispose 1
+pop temp 0
+// line 16: do game . dispose ( ) ; 
+push constant 0
+return
+// line 17: return ; 

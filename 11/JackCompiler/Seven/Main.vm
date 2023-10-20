@@ -1,0 +1,16 @@
+// File name: Seven\Main.vm
+// line 10: class Main { 
+// line 10: function void main 
+// line 12: ( ) { 
+function Main.main 0
+push constant 1
+push constant 2
+push constant 3
+call Math.multiply 2
+add
+call Output.printInt 1
+pop temp 0
+// line 12: do Output . printInt ( 1 + ( 2 * 3 ) ) ; 
+push constant 0
+return
+// line 13: return ; 

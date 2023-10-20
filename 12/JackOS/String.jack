@@ -1,0 +1,200 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/String.jack
+
+// *** need Math.jack
+
+/**
+ * Represents character strings. In addition for constructing and disposing
+ * strings, the class features methods for getting and setting individual
+ * characters of the string, for erasing the string's last character,
+ * for appending a character to the string's end, and more typical
+ * string-oriented operations.
+ */
+class String {
+    field Array str;
+    field int len;
+    field int max;
+
+    /** constructs a new empty string with a maximum length of maxLength
+     *  and initial length of 0. */
+    constructor String new(int maxLength) {
+        if (maxLength > 0) {
+            let str = Array.new(maxLength);
+            let len = 0;
+            let max = maxLength;
+            return this;
+        }
+        else {  // maxLength <= 0
+            let str = Array.new(1);
+            let len = 0;
+            let max = 0;
+            let str[0] = 0;
+            return this;
+        }
+    }
+
+    /** Disposes this string. */
+    method void dispose() {
+        do str.dispose();
+        return;
+    }
+
+    /** Returns the current length of this string. */
+    method int length() {
+        return len;
+    }
+
+    /** Returns the character at the j-th location of this string. */
+    method char charAt(int j) {
+        if ((j < 0) | (~(j < len))) {  // invalid index
+            return 0;
+        }
+        else {
+            return str[j];
+        }
+    }
+
+    /** Sets the character at the j-th location of this string to c. */
+    method void setCharAt(int j, char c) {
+        if ((j < 0) | (j > len)) {  // invalid index
+            return;
+        }
+        else {
+            let str[j] = c;
+            return;
+        }
+    }
+
+    /** Appends c to this string's end and returns this string. */
+    method String appendChar(char c) {
+        if (len = max) {  // no more room
+            return this;
+        }
+        else {
+            let str[len] = c;
+            let len = len + 1;
+            return this;
+        }
+    }
+
+    /** Erases the last character from this string. */
+    method void eraseLastChar() {
+        if (len = 0) {
+            return;
+        }
+        else {
+            let len = len - 1;
+            return;
+        }
+    }
+
+    /** Returns the integer value of this string, 
+     *  until a non-digit character is detected. */
+    method int intValue() {
+        var int i, value;
+        var char d;
+        let i = 0;
+        let value = 0;
+        if (str[0] = 45) {  // minus sign
+            let i = 1;
+            while (i < len) {
+                let d = str[i];
+                if ((d > 47) & (d < 58)) {
+                    let value = (10 * value) + (d - 48);
+                    let i = i + 1;
+                }
+                else {
+                    return -value;
+                }
+            }
+            return -value;
+        }
+        else{
+            while (i < len) {
+                let d = str[i];
+                if ((d > 47) & (d < 58)) {
+                    let value = (10 * value) + (d - 48);
+                    let i = i + 1;
+                }
+                else {
+                    return value;
+                }
+            }
+            return value;
+        } 
+    }
+
+    /** Sets this string to hold a representation of the given value. */
+    method void setInt(int val) {
+        var Array stack;
+        var int i, sp;
+        if (val = 0) {
+            let len = 1;
+            let str[0] = 48;
+            return;
+        }
+        else {  // val != 0
+            let stack = Array.new(6);  // int range is -32768 to 32767
+            let i = 0;
+            let sp = 0;
+            if (val < 0) {  // val < 0
+                let val = -val;
+                while (val > 0) {
+                    let stack[sp] = 48 + Math.mod(val, 10);
+                    let sp = sp + 1;
+                    let val = val / 10;
+                }
+                let stack[sp] = 45;  // minus sign
+                let sp = sp + 1;
+                if (max < sp) {
+                    do str.dispose();
+                    let str = Array.new(sp);
+                }
+                let len = sp;
+                while (sp > 0) {
+                    let sp = sp - 1;
+                    let str[i] = stack[sp];
+                    let i = i + 1;
+                }
+                do stack.dispose();
+                return;
+            }
+            else {  // val > 0
+                while (val > 0) {
+                    let stack[sp] = 48 + Math.mod(val, 10);
+                    let sp = sp + 1;
+                    let val = val / 10;
+                }
+                if (max < sp) {
+                    do str.dispose();
+                    let str = Array.new(sp);
+                }
+                let len = sp;
+                while (sp > 0) {
+                    let sp = sp - 1;
+                    let str[i] = stack[sp];
+                    let i = i + 1;
+                }
+                do stack.dispose();
+                return;
+            }
+        }
+    }
+
+    /** Returns the new line character. */
+    function char newLine() {
+        return 128;
+    }
+
+    /** Returns the backspace character. */
+    function char backSpace() {
+        return 129;
+    }
+
+    /** Returns the double quote (") character. */
+    function char doubleQuote() {
+        return 34;
+    }
+}

@@ -1,0 +1,20 @@
+// File name: Square\Main.vm
+// line 9: class Main { 
+// line 9: function void main 
+// line 10: ( ) { 
+// line 10: var SquareGame game ; 
+function Main.main 1
+call SquareGame.new 0
+pop local 0
+// line 11: let game = SquareGame . new ( ) ; 
+push local 0
+call SquareGame.run 1
+pop temp 0
+// line 12: do game . run ( ) ; 
+push local 0
+call SquareGame.dispose 1
+pop temp 0
+// line 13: do game . dispose ( ) ; 
+push constant 0
+return
+// line 14: return ; 

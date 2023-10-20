@@ -1,0 +1,385 @@
+// File name: Square\Square.vm
+// line 9: class Square { 
+// line 9: field x , y 
+// line 11: field size 
+// line 12: constructor Square new 
+// line 15: ( Ax , Ay , Asize ) { 
+function Square.new 0
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+// line 15: let x = Ax ; 
+push argument 1
+pop this 1
+// line 16: let y = Ay ; 
+push argument 2
+pop this 2
+// line 17: let size = Asize ; 
+push pointer 0
+call Square.draw 1
+pop temp 0
+// line 18: do draw ( ) ; 
+push pointer 0
+return
+// line 19: return this ; 
+// line 21: } method void dispose 
+// line 24: ( ) { 
+function Square.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+// line 24: do Memory . deAlloc ( this ) ; 
+push constant 0
+return
+// line 25: return ; 
+// line 27: } method void draw 
+// line 30: ( ) { 
+function Square.draw 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 30: do Screen . setColor ( true ) ; 
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 31: do Screen . drawRectangle ( x , y , x + size , y + size ) ; 
+push constant 0
+return
+// line 32: return ; 
+// line 34: } method void erase 
+// line 37: ( ) { 
+function Square.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 37: do Screen . setColor ( false ) ; 
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 38: do Screen . drawRectangle ( x , y , x + size , y + size ) ; 
+push constant 0
+return
+// line 39: return ; 
+// line 41: } method void incSize 
+// line 44: ( ) { 
+function Square.incSize 0
+push argument 0
+pop pointer 0
+push this 1
+push this 2
+add
+push constant 254
+lt
+push this 0
+push this 2
+add
+push constant 510
+lt
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+// line 44: if ( ( ( y + size ) < 254 ) & ( ( x + size ) < 510 ) ) { 
+push pointer 0
+call Square.erase 1
+pop temp 0
+// line 45: do erase ( ) ; 
+push this 2
+push constant 2
+add
+pop this 2
+// line 46: let size = size + 2 ; 
+push pointer 0
+call Square.draw 1
+pop temp 0
+// line 47: do draw ( ) ; 
+// line 48: } 
+label IF_FALSE0
+push constant 0
+return
+// line 49: return ; 
+// line 51: } method void decSize 
+// line 54: ( ) { 
+function Square.decSize 0
+push argument 0
+pop pointer 0
+push this 2
+push constant 2
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+// line 54: if ( size > 2 ) { 
+push pointer 0
+call Square.erase 1
+pop temp 0
+// line 55: do erase ( ) ; 
+push this 2
+push constant 2
+sub
+pop this 2
+// line 56: let size = size - 2 ; 
+push pointer 0
+call Square.draw 1
+pop temp 0
+// line 57: do draw ( ) ; 
+// line 58: } 
+label IF_FALSE1
+push constant 0
+return
+// line 59: return ; 
+// line 61: } method void moveUp 
+// line 64: ( ) { 
+function Square.moveUp 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+// line 64: if ( y > 1 ) { 
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 65: do Screen . setColor ( false ) ; 
+push this 0
+push this 1
+push this 2
+add
+push constant 1
+sub
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 66: do Screen . drawRectangle ( x , ( y + size ) - 1 , x + size , y + size ) ; 
+push this 1
+push constant 2
+sub
+pop this 1
+// line 67: let y = y - 2 ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 68: do Screen . setColor ( true ) ; 
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push constant 1
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 69: do Screen . drawRectangle ( x , y , x + size , y + 1 ) ; 
+// line 70: } 
+label IF_FALSE2
+push constant 0
+return
+// line 71: return ; 
+// line 73: } method void moveDown 
+// line 76: ( ) { 
+function Square.moveDown 0
+push argument 0
+pop pointer 0
+push this 1
+push this 2
+add
+push constant 254
+lt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+// line 76: if ( ( y + size ) < 254 ) { 
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 77: do Screen . setColor ( false ) ; 
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push constant 1
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 78: do Screen . drawRectangle ( x , y , x + size , y + 1 ) ; 
+push this 1
+push constant 2
+add
+pop this 1
+// line 79: let y = y + 2 ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 80: do Screen . setColor ( true ) ; 
+push this 0
+push this 1
+push this 2
+add
+push constant 1
+sub
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 81: do Screen . drawRectangle ( x , ( y + size ) - 1 , x + size , y + size ) ; 
+// line 82: } 
+label IF_FALSE3
+push constant 0
+return
+// line 83: return ; 
+// line 85: } method void moveLeft 
+// line 88: ( ) { 
+function Square.moveLeft 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 1
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+// line 88: if ( x > 1 ) { 
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 89: do Screen . setColor ( false ) ; 
+push this 0
+push this 2
+add
+push constant 1
+sub
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 90: do Screen . drawRectangle ( ( x + size ) - 1 , y , x + size , y + size ) ; 
+push this 0
+push constant 2
+sub
+pop this 0
+// line 91: let x = x - 2 ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 92: do Screen . setColor ( true ) ; 
+push this 0
+push this 1
+push this 0
+push constant 1
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 93: do Screen . drawRectangle ( x , y , x + 1 , y + size ) ; 
+// line 94: } 
+label IF_FALSE4
+push constant 0
+return
+// line 95: return ; 
+// line 97: } method void moveRight 
+// line 100: ( ) { 
+function Square.moveRight 0
+push argument 0
+pop pointer 0
+push this 0
+push this 2
+add
+push constant 510
+lt
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+// line 100: if ( ( x + size ) < 510 ) { 
+push constant 0
+call Screen.setColor 1
+pop temp 0
+// line 101: do Screen . setColor ( false ) ; 
+push this 0
+push this 1
+push this 0
+push constant 1
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 102: do Screen . drawRectangle ( x , y , x + 1 , y + size ) ; 
+push this 0
+push constant 2
+add
+pop this 0
+// line 103: let x = x + 2 ; 
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+// line 104: do Screen . setColor ( true ) ; 
+push this 0
+push this 2
+add
+push constant 1
+sub
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+// line 105: do Screen . drawRectangle ( ( x + size ) - 1 , y , x + size , y + size ) ; 
+// line 106: } 
+label IF_FALSE5
+push constant 0
+return
+// line 107: return ; 

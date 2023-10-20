@@ -1,0 +1,1 @@
+The VMEmulator will change some static variables' value for no reason (I've done so many tests and confirm it is the bug of the VMEmulator, my Jack codes are fine), so cannot pass Pong test. But we can pass every module test.
